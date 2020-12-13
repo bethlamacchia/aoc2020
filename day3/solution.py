@@ -11,17 +11,20 @@ Find the product of the num. trees hit with slopes of
 
 """
 
-def trees_hit(lines):
-    x = 3
-    y = 1
+p2_right = [1, 3, 5, 7, 1]
+p2_down = [1, 1, 1, 1, 2]
+
+def trees_hit(x, y, lines):
+    dx = x
+    dy = y
     trees = 0
     while y < len(lines):
         if x > len(lines[y]) - 1:
             x = x % len(lines[y])
         if lines[y][x] == '#':
             trees += 1
-        x += 3
-        y += 1
+        x += dx
+        y += dy
     return trees
 
 with open('input.txt') as file:
@@ -30,6 +33,12 @@ with open('input.txt') as file:
     width = len(lines[0])
     lines = [list(line.rstrip()) for line in lines]
 
-    print("Part 1", trees_hit(lines))
+    print("Part 1", trees_hit(3, 1, lines))
+
+    tree_product = 1
+    for (x, y) in zip(p2_right, p2_down):
+        tree_product *= trees_hit(x, y, lines)
+
+    print("Part 2", tree_product)
 
 
