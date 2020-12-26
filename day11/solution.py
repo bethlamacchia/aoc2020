@@ -14,7 +14,7 @@ The other rules still apply: empty seats that see no occupied seats become occup
 seats matching no rule don't change, and floor never changes. 
 """
 
-def count_adj(row,col,prev):
+def count_adj(row,col,prev, part_one):
     s=0
     for rinc,colinc in [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]:
         r=row
@@ -27,10 +27,15 @@ def count_adj(row,col,prev):
             if(prev[r][c]=="#"):
                 s+=1
                 break
-            break
+            # for part one we only look at immediately adjacent seats so break after one step
+            # in each direction,
+            # for part 2 keep going in each direction until we hit an occupied seat
+            # or a wall
+            if (part_one):
+                break
     return s
 
-def solve(data):
+def solve(data, part_one):
     table=[row.copy() for row in data]
     # each calculation should be based off of the unchanged seats, even though
     # we change the seating as we go through the table, so make a copy
@@ -42,12 +47,13 @@ def solve(data):
                 # if this isn't a floor space (.)
                 if(table[row][col]!="."):
                     # count how many adjacent seats are filled
-                    n=count_adj(row, col, prev)
+                    n=count_adj(row, col, prev, part_one)
                     # if no seats filled adjacent and this is an empty seat,fill the seat
                     if(n==0 and prev[row][col]=="L"):
                         table[row][col]="#"
                     # if more than 4 seats filled adjacent and this is a filled seat, vacate it
-                    if(n>=4and prev[row][col]=="#"):
+                    # part 2: five visible seat
+                    if(n>=(4 if part_one else 5)and prev[row][col]=="#"):
                         table[row][col]="L"
         if prev==table:
             break
@@ -58,5 +64,6 @@ if __name__ == "__main__":
 
     data = open("input.txt", "r").read().strip().split("\n")
     data = [list(row) for row in data]
-    print("Part 1: ", solve(data))
+    print("Part 1: ", solve(data, part_one=True))
+    print("Part 2: ", solve(data, part_one=False))
 
