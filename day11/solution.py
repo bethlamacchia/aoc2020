@@ -1,4 +1,3 @@
-from collections import defaultdict
 """
 part 1:
 Simulate your seating area by applying the seating rules repeatedly until no seats change state. 
